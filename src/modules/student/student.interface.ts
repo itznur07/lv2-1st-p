@@ -14,11 +14,13 @@ export interface Student {
   gender: 'male' | 'female';
   dateOfBirth?: string;
   email: string;
+  password: string;
   contactNo: string;
   emergencyContactNo?: string;
   bloodGroups?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
   presentAddress: string;
   parmanentAddress: string;
   isActive: 'active' | 'ofline';
+  isDeleted: boolean;
   guardian: Guardian;
 }

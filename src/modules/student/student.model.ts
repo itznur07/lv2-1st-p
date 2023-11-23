@@ -1,82 +1,126 @@
+import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
 import validator from 'validator';
+import config from '../../app/config';
 import { Student } from './student.interface';
 
-const studentSchema = new Schema<Student>({
-  id: { type: String, required: true, unique: true },
-  name: {
-    firstName: {
-      type: String,
-      required: [true, 'Name is required!'],
-      maxlength: [8, 'Name should be 8 charectar'],
-      trim: true,
-    },
-    middleName: { type: String, trim: true },
-    lastName: {
-      type: String,
-      required: [true, 'Last is required!'],
-      trim: true,
-      validate: {
-        validator: (value: string) => validator.isAlpha(value),
-        message: '{VALUE} is not valid',
+const studentSchema = new Schema<Student>(
+  {
+    id: { type: String, required: true, unique: true },
+    name: {
+      firstName: {
+        type: String,
+        required: [true, 'Name is required!'],
+        maxlength: [8, 'Name should be 8 charectar'],
+        trim: true,
+      },
+      middleName: { type: String, trim: true },
+      lastName: {
+        type: String,
+        required: [true, 'Last is required!'],
+        trim: true,
+        validate: {
+          validator: (value: string) => validator.isAlpha(value),
+          message: '{VALUE} is not valid',
+        },
       },
     },
-  },
-  email: { type: String, required: true, unique: true, trim: true },
-  gender: {
-    type: String,
-    enum: {
-      values: ['male', 'female'],
-      message: '{VALUE} is not acceptable! plz change it male or female',
-    },
-    required: true,
-  },
-  bloodGroups: {
-    type: String,
-    enum: {
-      values: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
-      message: '{VALUE} is not accaptable. plz, change it required data',
-    },
-  },
-  isActive: {
-    type: String,
-    enum: {
-      values: ['active', 'ofline'],
-      message: '{VALUE} is not acceptable. plz change it active or ofline',
-    },
-    default: 'active',
-    required: true,
-  },
-  contactNo: {
-    type: String,
-    required: [true, 'Contact is required!'],
-    trim: true,
-  },
-  dateOfBirth: { type: String, trim: true },
-  emergencyContactNo: { type: String, trim: true },
-  guardian: {
-    fatherName: {
+    email: { type: String, required: true, unique: true, trim: true },
+    password: {
       type: String,
-      required: [true, 'Father name is required!'],
+      required: true,
+
+      maxlength: 20,
       trim: true,
     },
-    fatherOce: { type: String, trim: true },
-    fatherContactNo: {
+    gender: {
       type: String,
-      required: [true, 'Father contact is required!'],
+      enum: {
+        values: ['male', 'female'],
+        message: '{VALUE} is not acceptable! plz change it male or female',
+      },
+      required: true,
+    },
+    bloodGroups: {
+      type: String,
+      enum: {
+        values: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+        message: '{VALUE} is not accaptable. plz, change it required data',
+      },
+    },
+    isActive: {
+      type: String,
+      enum: {
+        values: ['active', 'ofline'],
+        message: '{VALUE} is not acceptable. plz change it active or ofline',
+      },
+      default: 'active',
+      required: true,
+    },
+    contactNo: {
+      type: String,
+      required: [true, 'Contact is required!'],
       trim: true,
     },
+    dateOfBirth: { type: String, trim: true },
+    emergencyContactNo: { type: String, trim: true },
+    guardian: {
+      fatherName: {
+        type: String,
+        required: [true, 'Father name is required!'],
+        trim: true,
+      },
+      fatherOce: { type: String, trim: true },
+      fatherContactNo: {
+        type: String,
+        required: [true, 'Father contact is required!'],
+        trim: true,
+      },
+    },
+    parmanentAddress: {
+      type: String,
+      required: [true, 'Parmanet address is required!'],
+      trim: true,
+    },
+    presentAddress: {
+      type: String,
+      required: [true, 'present address is required!'],
+      trim: true,
+    },
+    isDeleted: {
+      type: Boolean,
+    },
   },
-  parmanentAddress: {
-    type: String,
-    required: [true, 'Parmanet address is required!'],
-    trim: true,
+  {
+    toJSON: {
+      virtuals: true,
+    },
   },
-  presentAddress: {
-    type: String,
-    required: [true, 'present address is required!'],
-    trim: true,
-  },
+);
+
+// versual magic
+
+studentSchema.virtual('fullName').get(function () {
+  return `${this.name.firstName}  ${this.name.middleName} ${this.name.lastName}`;
+});
+
+studentSchema.pre('save', async function (next) {
+  const student = this;
+  student.password = await bcrypt.hash(
+    student.password,
+    Number(config.bcrypt_salt_round),
+  );
+  next();
+});
+
+studentSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
+
+studentSchema.pre('find', async function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
 });
 
 export const StudentModel = model<Student>('Students', studentSchema);

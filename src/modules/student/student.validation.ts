@@ -16,6 +16,7 @@ export const studentValidationSchema = z.object({
   id: z.string().min(1),
   name: nameValidationSchema,
   email: z.string().email(),
+  password: z.string(),
   gender: z.enum(['male', 'female']),
   bloodGroups: z
     .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
@@ -27,4 +28,5 @@ export const studentValidationSchema = z.object({
   guardian: guardianValidationSchema,
   parmanentAddress: z.string().min(1).trim(),
   presentAddress: z.string().min(1).trim(),
+  isDeleted: z.boolean(),
 });
