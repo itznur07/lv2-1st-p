@@ -13,6 +13,7 @@ app.use('/api/v1/students', StudentRouters);
 app.use('/api/v1/', StudentRouters);
 app.use('/api/v1/:id', StudentRouters);
 app.use('/api/v1/:deletedId', StudentRouters);
+app.use('/api/v1/changeStatus/:id', StudentRouters);
 
 /** application routers ends here ⏱️ */
 
