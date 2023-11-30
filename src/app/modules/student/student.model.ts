@@ -4,7 +4,6 @@ import { TStudent } from './student.interface';
 
 const studentSchema = new Schema<TStudent>(
   {
-    id: { type: String, required: true, unique: true },
     user: {
       type: Schema.Types.ObjectId,
       required: [true, ' user Id must be required'],
@@ -46,15 +45,7 @@ const studentSchema = new Schema<TStudent>(
         message: '{VALUE} is not accaptable. plz, change it required data',
       },
     },
-    isActive: {
-      type: String,
-      enum: {
-        values: ['active', 'ofline'],
-        message: '{VALUE} is not acceptable. plz change it active or ofline',
-      },
-      default: 'active',
-      required: true,
-    },
+
     contactNo: {
       type: String,
       required: [true, 'Contact is required!'],
@@ -84,9 +75,6 @@ const studentSchema = new Schema<TStudent>(
       type: String,
       required: [true, 'present address is required!'],
       trim: true,
-    },
-    isDeleted: {
-      type: Boolean,
     },
   },
   {

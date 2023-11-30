@@ -7,7 +7,6 @@ type Guardian = {
 };
 
 export interface TStudent {
-  id: string;
   user: Types.ObjectId;
   name: {
     firstName: string;
@@ -23,7 +22,5 @@ export interface TStudent {
   bloodGroups?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
   presentAddress: string;
   parmanentAddress: string;
-  isActive: 'active' | 'ofline';
-  isDeleted: boolean;
   guardian: Guardian;
 }
