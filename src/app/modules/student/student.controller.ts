@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
+import httpStatus from 'http-status';
+import sendResponse from '../../utils/sendResponse';
 import { StudentServices } from './student.service';
 
 const getAllStudents = async (
@@ -9,7 +11,8 @@ const getAllStudents = async (
   try {
     const result = await StudentServices.getAllStudentsToDB();
 
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
       message: 'students data get successfully!',
       data: result,
@@ -28,13 +31,14 @@ const getSignleStudent = async (
     const id = req.params.id;
     const result = await StudentServices.getSingleStudentToDB(id);
 
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
       message: 'signle student get successfully!',
       data: result,
     });
   } catch (error) {
-    next(error); // send it globalErrorHandling Middleware function
+    next(error);
   }
 };
 
@@ -48,7 +52,8 @@ const deletedSingleStudent = async (
 
     const result = await StudentServices.deletedSingleStudentToDB(studentId);
 
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
       message: 'Student deleted successfully!',
       data: result,
@@ -67,7 +72,8 @@ const changeStatus = async (
     const updaterId = req.params.id;
     const result = await StudentServices.changeStatusToDB(updaterId);
 
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
       message: 'status updated successfully!',
       data: result,

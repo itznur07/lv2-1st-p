@@ -3,8 +3,8 @@ import cors from 'cors';
 import express, { Application, Request, Response } from 'express';
 import globalErrorHandling from './app/middlware/globalErrorHandler';
 import notFound from './app/middlware/notFound';
-import { StudentRouters } from './modules/student/student.route';
-import { UserRoutes } from './modules/user/uesr.route';
+import router from './app/routes';
+
 const app: Application = express();
 
 /** parser 📦 */
@@ -12,8 +12,7 @@ app.use(express.json());
 app.use(cors());
 
 /** application routers start here 🏃‍♂️ */
-app.use('/api/v1/user', UserRoutes);
-app.use('/api/v1/student', StudentRouters);
+app.use('/api/v1', router);
 /** application routers ends here ⏱️ */
 
 /** APIs start here 🏃‍♂️ */
