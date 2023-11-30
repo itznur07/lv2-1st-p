@@ -1,7 +1,11 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { StudentServices } from './student.service';
 
-const getAllStudents = async (req: Request, res: Response) => {
+const getAllStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await StudentServices.getAllStudentsToDB();
 
@@ -11,11 +15,15 @@ const getAllStudents = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
 
-const getSignleStudent = async (req: Request, res: Response) => {
+const getSignleStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const id = req.params.id;
     const result = await StudentServices.getSingleStudentToDB(id);
@@ -26,11 +34,15 @@ const getSignleStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    console.log(error);
+    next(error); // send it globalErrorHandling Middleware function
   }
 };
 
-const deletedSingleStudent = async (req: Request, res: Response) => {
+const deletedSingleStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const studentId = req.params.id;
 
@@ -41,16 +53,16 @@ const deletedSingleStudent = async (req: Request, res: Response) => {
       message: 'Student deleted successfully!',
       data: result,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || 'Something went wrong!',
-      error: error,
-    });
+  } catch (error) {
+    next(error);
   }
 };
 
-const changeStatus = async (req: Request, res: Response) => {
+const changeStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const updaterId = req.params.id;
     const result = await StudentServices.changeStatusToDB(updaterId);
@@ -60,12 +72,8 @@ const changeStatus = async (req: Request, res: Response) => {
       message: 'status updated successfully!',
       data: result,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || 'Something went wrong!',
-      error: error,
-    });
+  } catch (error) {
+    next(error);
   }
 };
 

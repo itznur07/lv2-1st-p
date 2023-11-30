@@ -1,12 +1,16 @@
-import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
 import validator from 'validator';
-import config from '../../app/config';
-import { Student } from './student.interface';
+import { TStudent } from './student.interface';
 
-const studentSchema = new Schema<Student>(
+const studentSchema = new Schema<TStudent>(
   {
     id: { type: String, required: true, unique: true },
+    user: {
+      type: Schema.Types.ObjectId,
+      required: [true, ' user Id must be required'],
+      unique: true,
+      ref: 'UserModel',
+    },
     name: {
       firstName: {
         type: String,
@@ -26,13 +30,7 @@ const studentSchema = new Schema<Student>(
       },
     },
     email: { type: String, required: true, unique: true, trim: true },
-    password: {
-      type: String,
-      required: true,
 
-      maxlength: 20,
-      trim: true,
-    },
     gender: {
       type: String,
       enum: {
@@ -104,23 +102,9 @@ studentSchema.virtual('fullName').get(function () {
   return `${this.name.firstName}  ${this.name.middleName} ${this.name.lastName}`;
 });
 
-studentSchema.pre('save', async function (next) {
-  const student = this;
-  student.password = await bcrypt.hash(
-    student.password,
-    Number(config.bcrypt_salt_round),
-  );
-  next();
-});
-
-studentSchema.post('save', function (doc, next) {
-  doc.password = '';
-  next();
-});
-
 studentSchema.pre('find', async function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
 
-export const StudentModel = model<Student>('Students', studentSchema);
+export const StudentModel = model<TStudent>('Students', studentSchema);

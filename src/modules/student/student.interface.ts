@@ -1,11 +1,14 @@
+import { Types } from 'mongoose';
+
 type Guardian = {
   fatherName: string;
   fatherOce?: string;
   fatherContactNo: string;
 };
 
-export interface Student {
+export interface TStudent {
   id: string;
+  user: Types.ObjectId;
   name: {
     firstName: string;
     middleName?: string;
