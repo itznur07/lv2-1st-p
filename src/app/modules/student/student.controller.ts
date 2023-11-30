@@ -1,91 +1,62 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 import httpStatus from 'http-status';
 import sendResponse from '../../utils/sendResponse';
 import { StudentServices } from './student.service';
 
-const getAllStudents = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const result = await StudentServices.getAllStudentsToDB();
-
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'students data get successfully!',
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
+// handling catchAsync HOC
+const catchAsync = (asyncFc: RequestHandler) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    Promise.resolve(asyncFc(req, res, next)).catch((err) => next(err));
+  };
 };
 
-const getSignleStudent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const id = req.params.id;
-    const result = await StudentServices.getSingleStudentToDB(id);
+const getStudents = catchAsync(async (req, res, next) => {
+  const result = await StudentServices.getAllStudentsToDB();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'students data get successfully!',
+    data: result,
+  });
+});
 
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'signle student get successfully!',
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+const getStudent = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+  const result = await StudentServices.getSingleStudentToDB(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'signle student get successfully!',
+    data: result,
+  });
+});
 
-const deletedSingleStudent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const studentId = req.params.id;
+const deleteStudent = catchAsync(async (req, res, next) => {
+  const studentId = req.params.id;
+  const result = await StudentServices.deletedSingleStudentToDB(studentId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Student deleted successfully!',
+    data: result,
+  });
+});
 
-    const result = await StudentServices.deletedSingleStudentToDB(studentId);
+const changeStatus = catchAsync(async (req, res, next) => {
+  const updaterId = req.params.id;
+  const result = await StudentServices.changeStatusToDB(updaterId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'status updated successfully!',
+    data: result,
+  });
+});
 
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'Student deleted successfully!',
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const changeStatus = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const updaterId = req.params.id;
-    const result = await StudentServices.changeStatusToDB(updaterId);
-
-    sendResponse(res, {
-      statusCode: httpStatus.OK,
-      success: true,
-      message: 'status updated successfully!',
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
+//---------------Exproter----------!>
 export const StudentControllers = {
-  getAllStudents,
-  getSignleStudent,
-  deletedSingleStudent,
+  getStudents,
+  getStudent,
+  deleteStudent,
   changeStatus,
 };
