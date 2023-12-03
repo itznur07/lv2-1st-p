@@ -39,6 +39,19 @@ const academicSemesterSchema = new Schema<TAcademicSemester>(
   },
 );
 
+// middleware hook
+
+academicSemesterSchema.pre('save', async function (next) {
+  const isSemesterExists = await AcademicSemesterModel.findOne({
+    year: this.year,
+    name: this.name,
+  });
+  if (isSemesterExists) {
+    throw new Error(`this ${this.name} semester already created ${this.year}`);
+  }
+  next();
+});
+
 export const AcademicSemesterModel = model(
   'AcademicSemesters',
   academicSemesterSchema,
