@@ -32,8 +32,24 @@ const getAcademicSemesterToDB = async (id: string) => {
   return result;
 };
 
+const updateAcademicSemesterToDB = async (
+  id: string,
+  payload: TAcademicSemester,
+) => {
+  const result = await AcademicSemesterModel.updateOne(
+    {
+      _id: id,
+    },
+    {
+      $set: payload,
+    },
+  );
+  return result;
+};
+
 export const academicSemesterServices = {
   createAcademicSemesterToDB,
   getAcademicSemestersToDB,
   getAcademicSemesterToDB,
+  updateAcademicSemesterToDB,
 };
