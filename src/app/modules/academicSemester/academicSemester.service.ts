@@ -22,12 +22,18 @@ const createAcademicSemesterToDB = async (payload: TAcademicSemester) => {
   return result;
 };
 
-const getAcademicSemesterToDB = async () => {
+const getAcademicSemestersToDB = async () => {
   const result = await AcademicSemesterModel.find();
+  return result;
+};
+
+const getAcademicSemesterToDB = async (id: string) => {
+  const result = await AcademicSemesterModel.findById(id);
   return result;
 };
 
 export const academicSemesterServices = {
   createAcademicSemesterToDB,
+  getAcademicSemestersToDB,
   getAcademicSemesterToDB,
 };
