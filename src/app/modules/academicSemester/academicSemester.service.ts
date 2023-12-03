@@ -1,7 +1,7 @@
 import { TAcademicSemester } from './academicSemester.interface';
 import { AcademicSemesterModel } from './academicSemester.model';
 
-const createAcademicSemesterToDB = async (academicData: TAcademicSemester) => {
+const createAcademicSemesterToDB = async (payload: TAcademicSemester) => {
   // if semester code !== semester name then ki hobe
 
   type TAcademicSemesterNameCodeMapper = {
@@ -14,14 +14,20 @@ const createAcademicSemesterToDB = async (academicData: TAcademicSemester) => {
     Fall: '03',
   };
 
-  if (academicSemesterNameCodeMapper[academicData.name] !== academicData.code) {
+  if (academicSemesterNameCodeMapper[payload.name] !== payload.code) {
     throw new Error('Invalid semester code!');
   }
 
-  const result = await AcademicSemesterModel.create(academicData);
+  const result = await AcademicSemesterModel.create(payload);
+  return result;
+};
+
+const getAcademicSemesterToDB = async () => {
+  const result = await AcademicSemesterModel.find();
   return result;
 };
 
 export const academicSemesterServices = {
   createAcademicSemesterToDB,
+  getAcademicSemesterToDB,
 };
