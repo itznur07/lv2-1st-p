@@ -23,4 +23,5 @@ export interface TStudent {
   presentAddress: string;
   parmanentAddress: string;
   guardian: Guardian;
+  admissionSemester: Types.ObjectId;
 }

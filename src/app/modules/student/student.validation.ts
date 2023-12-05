@@ -29,6 +29,7 @@ const studentValidationSchema = z.object({
       guardian: guardianValidationSchema,
       parmanentAddress: z.string().min(1).trim(),
       presentAddress: z.string().min(1).trim(),
+      admissionSemester: z.string(),
     }),
   }),
 });

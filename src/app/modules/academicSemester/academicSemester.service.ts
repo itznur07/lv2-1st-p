@@ -36,6 +36,20 @@ const updateAcademicSemesterToDB = async (
   id: string,
   payload: TAcademicSemester,
 ) => {
+  type TAcademicSemesterNameCodeMapper = {
+    [keys: string]: string;
+  };
+
+  const academicSemesterNameCodeMapper: TAcademicSemesterNameCodeMapper = {
+    Autumn: '01',
+    Summar: '02',
+    Fall: '03',
+  };
+
+  if (academicSemesterNameCodeMapper[payload.name] !== payload.code) {
+    throw new Error('Invalid semester code!');
+  }
+
   const result = await AcademicSemesterModel.updateOne(
     {
       _id: id,

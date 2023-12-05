@@ -3,6 +3,7 @@ import { TStudent } from '../student/student.interface';
 import { StudentModel } from '../student/student.model';
 import { TUser } from './user.interface';
 import { UserModel } from './user.model';
+import { generatedStudentId } from './user.utils';
 
 const createStudentToDB = async (password: string, studentData: TStudent) => {
   const userData: Partial<TUser> = {};
@@ -11,7 +12,7 @@ const createStudentToDB = async (password: string, studentData: TStudent) => {
 
   userData.role = 'student';
 
-  userData.id = '30102000';
+  userData.id = generatedStudentId(studentData.admissionSemester  );
 
   const newUser = await UserModel.create(userData);
 

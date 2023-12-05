@@ -76,6 +76,10 @@ const studentSchema = new Schema<TStudent>(
       required: [true, 'present address is required!'],
       trim: true,
     },
+    admissionSemester: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicSemesterModel',
+    },
   },
   {
     toJSON: {
