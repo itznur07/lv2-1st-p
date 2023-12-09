@@ -16,13 +16,12 @@ const getAcademicFacultyToDB = async (id: number | string) => {
   return result;
 };
 
-const updateAcademicFaculty = async (
-  id: number | string,
-  updatedData: TAcademciFaculty,
-) => {
+const updateAcademicFaculty = async (id, updatedData: TAcademciFaculty) => {
   const result = await academicFacultyModel.updateOne({
     _id: id,
-    $set: updatedData,
+    $set: {
+      updatedData,
+    },
   });
   return result;
 };

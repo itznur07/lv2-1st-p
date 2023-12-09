@@ -1,7 +1,6 @@
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
-import { TAcademciFaculty } from './academicFaculty.interface';
 import { AcademicFacultyServices } from './academicFaculty.service';
 
 const createAcademicFaculty = catchAsync(async (req, res) => {
@@ -42,11 +41,9 @@ const getAcademicFaculty = catchAsync(async (req, res) => {
 
 const updateAcademicFaculty = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const updateData: TAcademciFaculty = req.body;
-
   const result = await AcademicFacultyServices.updateAcademicFaculty(
     id,
-    updateData,
+    req.body,
   );
 
   sendResponse(res, {
