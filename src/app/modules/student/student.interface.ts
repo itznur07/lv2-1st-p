@@ -7,6 +7,7 @@ type Guardian = {
 };
 
 export interface TStudent {
+  id: string;
   user: Types.ObjectId;
   name: {
     firstName: string;

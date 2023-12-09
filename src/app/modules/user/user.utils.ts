@@ -1,10 +1,30 @@
+// year semesterCode 4digit number
 import { TAcademicSemester } from '../academicSemester/academicSemester.interface';
 
-export const generatedStudentId = (payload: TAcademicSemester) => {
-  const currentId = (0).toString().padStart(4, '0');
-  let incrementId = (Number(currentId) + 1).toString();
+// const findLastStudentId = async () => {
+//   const lastStudent = await UserModel.findOne(
+//     {
+//       role: 'student',
+//     },
+//     {
+//       id: 1,
+//       _id: 0,
+//     },
+//   )
+//     .sort({
+//       createdAt: -1,
+//     })
+//     .lean();
 
-  incrementId = `${payload.year} ${payload.code}${incrementId}`;
+//   return lastStudent?.id ? lastStudent.id : undefined;
+// };
+
+export const generateStudentId = async (payload: TAcademicSemester) => {
+  let currentId = (0).toString(); // 0000 by deafult
+
+  let incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
+
+  incrementId = `${payload.year}${payload.code}${incrementId}`;
 
   return incrementId;
 };
